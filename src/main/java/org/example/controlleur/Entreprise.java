@@ -12,6 +12,7 @@ public class Entreprise {
     Map<Integer, Region> regions = new HashMap<Integer,Region>();
     Map<Integer, Compteur> compteurs = new HashMap<Integer,Compteur>();
     Map<Client, List<Abonnement>> abonnements = new HashMap<Client, List<Abonnement>>();
+
     public Client indiquerClient(int noClient){
         if (this.clients.containsKey(noClient)) {
             return this.clients.get(noClient);
@@ -54,29 +55,15 @@ public class Entreprise {
         List<Region> list = (List<Region>) regions.values();
         return list;
     }
-    private double consommation(Prelevement oldPrelevement,Prelevement newPrelevement) {
-        double index = newPrelevement.getIndex()-oldPrelevement.getIndex()
-        if (index<100) {
-            return index*1.2;
-        }
-        else if (index<200) {
-            return 100*1.2+(index-100)*1.5;
-        }
-        else {
-            return 100*1.2+100*1.5+(index-100)*1.8;
-        }
+
+
+    public void validerPrelevement(int noRegion,int noLocalite,double consommation,int noAbonnement) {
+        Localite local=indiquerLocalite(noLocalite,noRegion);
+        List<Abonnement> abs = local.getAbonnements();
+        Abonnement abn = local.getAbonnementById(noAbonnement);
+        abn.createPrelevement(LocalDate.now(),generateKey(),consommation);
     }
 
-    public double validerPrelevement(int noRegion,int noLocalite,int noCompteur,double consommation) {
-        Localite local = indiquerLocalite(noLocalite,noRegion);
-        Compteur comp = indiquerCompteur(noCompteur);
-
-    }
-
-    public List<Compteur> getListCompteur(int noLocalite,int noRegion){
-        Localite local = indiquerLocalite(noLocalite,noRegion);
-
-    }
 
     public List<Localite> getLocaliteParRegion(int noRegion){
         if (this.regions.containsKey(noRegion)) {
